@@ -178,7 +178,7 @@ if hemisferio == "N":
     else:
         estacion = "fecha no válida"
 
-    elif hemisferio == "S":
+elif hemisferio == "S":
     if (mes == 12 and dia >= 21) or (mes <= 3 and (mes != 3 or dia <= 20)):
         estacion = "verano"
     elif (mes == 3 and dia >= 21) or (mes <= 6 and (mes != 6 or dia <= 20)):
