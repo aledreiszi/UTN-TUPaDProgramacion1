@@ -5,7 +5,7 @@
 edad = int(input("Por favor, ingrese su edad: "))
 if edad > 18:
     print("Es mayor de edad.")
-    else:
+else:
     print("No es mayor de edad.")
 
 ## 2) Escribir un programa que solicite su nota al usuario. Si la nota es mayor o igual a 6, debe rá
