@@ -1,0 +1,204 @@
+## Primer parcial - Programacion 1
+
+##  Realizar un programa de gestion simple de una biblioteca con listas paralelas
+
+##  Restricciones: sin funciones, sin clases, sin diccionarios, sin estructuras avanzadas
+
+##  El programa debe permitir: ingresar titulos, ejemplares disponibles, mostrar catalogo, consultar disponibilidad,
+##  listar agotados, agregar titulo, actualizar ejemplares, salir.
+
+titulos = []
+ejemplares = []
+
+opcion = ""
+
+while opcion != "8":
+    print("\n" + "="*60)
+    print("SISTEMA DE GESTIÓN - BIBLIOTECA ESCOLAR")
+    print("="*60)
+    print("1) Ingresar títulos")
+    print("2) Ingresar ejemplares")
+    print("3) Mostrar catálogo")
+    print("4) Consultar disponibilidad")
+    print("5) Listar agotados")
+    print("6) Agregar título")
+    print("7) Actualizar ejemplares (préstamo/devolución)")
+    print("8) Salir")
+    opcion = input("Elegí una opción (1-8): ").strip()
+
+    match opcion:
+        case "1":
+            print("\n>>> Ingresar títulos (uno por línea). Enter vacío para finalizar.")
+            while True:
+                titulo = input("Título: ").strip()
+                if titulo == "":
+                    break
+                existe = False
+                t_busca = titulo.casefold()
+                i = 0
+                while i < len(titulos):
+                    if titulos[i].casefold() == t_busca:
+                        existe = True
+                        break
+                    i += 1
+                if existe:
+                    print("⚠️  Ya existe ese título en el catálogo. No se agrega.")
+                else:
+                    titulos.append(titulo)
+                    ejemplares.append(0)  
+                    print("✅ Agregado con stock inicial = 0 (actualizá en opción 2 o 7).")
+
+        case "2":
+            print("\n>>> Ingresar n¿ejemplares por título")
+            if len(titulos) == 0:
+                print("⚠️  No hay títulos cargados.")
+            else:
+                i = 0
+                while i < len(titulos):
+                    valido = False
+                    while not valido:
+                        cant_str = input(f"Ejemplares para '{titulos[i]}' (>=0): ").strip()
+                        if cant_str.isdigit():
+                            cant = int(cant_str)
+                            if cant >= 0:
+                                valido = True
+                                ejemplares[i] = cant
+                            else:
+                                print("⚠️  Debe ser un entero >= 0.")
+                        else:
+                            print("⚠️  Ingresá solo números enteros no negativos.")
+                    i += 1
+                print("✅ Stock ingresado.")
+
+        case "3":
+            print("\n>>> Catálogo completo")
+            if len(titulos) == 0:
+                print("⚠️  Catálogo vacío.")
+            else:
+                i = 0
+                while i < len(titulos):
+                    print(f"- {titulos[i]}  |  Stock: {ejemplares[i]}")
+                    i += 1
+
+        case "4":
+            print("\n>>> Consultar disponibilidad de un título")
+            if len(titulos) == 0:
+                print("⚠️  Catálogo vacío.")
+            else:
+                buscado = input("Ingresá el título a buscar: ").strip()
+                if buscado == "":
+                    print("⚠️  El título no puede ser vacío.")
+                else:
+                    id = -1
+                    b = buscado.casefold()
+                    i = 0
+                    while i < len(titulos):
+                        if titulos[i].casefold() == b:
+                            id = i
+                            break
+                        i += 1
+                    if id == -1:
+                        print("❌ Título no encontrado.")
+                    else:
+                        print(f"✅ '{titulos[id]}': {ejemplares[id]} ejemplar(es) disponible(s).")
+
+        case "5":
+            print("\n>>> Listar títulos agotados (stock = 0)")
+            if len(titulos) == 0:
+                print("⚠️  Catálogo vacío.")
+            else:
+                hay_agotados = False
+                i = 0
+                while i < len(titulos):
+                    if ejemplares[i] == 0:
+                        if not hay_agotados:
+                            print("Títulos sin stock:")
+                            hay_agotados = True
+                        print(f"- {titulos[i]}")
+                    i += 1
+                if not hay_agotados:
+                    print("✅ No hay títulos agotados.")
+
+        case "6":
+            print("\n>>> Agregar título (con su stock inicial)")
+            nuevo = input("Título nuevo: ").strip()
+            if nuevo == "":
+                print("⚠️  El título no puede ser vacío.")
+            else:
+                existe = False
+                nb = nuevo.casefold()
+                i = 0
+                while i < len(titulos):
+                    if titulos[i].casefold() == nb:
+                        existe = True
+                        break
+                    i += 1
+                if existe:
+                    print("⚠️  Ya existe ese título.")
+                else:
+                    valido = False
+                    while not valido:
+                        s = input("Stock inicial (>=0): ").strip()
+                        if s.isdigit():
+                            cant = int(s)
+                            if cant >= 0:
+                                valido = True
+                            else:
+                                print("⚠️  Debe ser un entero >= 0.")
+                        else:
+                            print("⚠️  Ingresá solo números enteros no negativos.")
+                    titulos.append(nuevo)
+                    ejemplares.append(cant)
+                    print(f"✅ Agregado: '{nuevo}' con stock {cant}.")
+
+        case "7":
+            print("\n>>> Actualizar ejemplares (Préstamo/Devolución)")
+            if len(titulos) == 0:
+                print("⚠️  Catálogo vacío.")
+            else:
+                nombre = input("Título: ").strip()
+                if nombre == "":
+                    print("⚠️  El título no puede ser vacío.")
+                else:
+                    idx = -1
+                    nv = nombre.casefold()
+                    i = 0
+                    while i < len(titulos):
+                        if titulos[i].casefold() == nv:
+                            idx = i
+                            break
+                        i += 1
+                    if idx == -1:
+                        print("❌ Título no encontrado.")
+                    else:
+                        print("Tipo de operación: P = Préstamo | D = Devolución")
+                        tipo = input("Elegí (P/D): ").strip().upper()
+                        if tipo != "P" and tipo != "D":
+                            print("⚠️  Opción inválida.")
+                        else:
+                            valido = False
+                            while not valido:
+                                c = input("Cantidad (>0): ").strip()
+                                if c.isdigit():
+                                    cant = int(c)
+                                    if cant > 0:
+                                        valido = True
+                                    else:
+                                        print("⚠️  Debe ser un entero > 0.")
+                                else:
+                                    print("⚠️  Ingresá solo números enteros positivos.")
+
+                            if tipo == "P":
+                                if cant > ejemplares[idx]:
+                                    print(f"❌ No se puede prestar {cant}. Stock disponible: {ejemplares[idx]}.")
+                                else:
+                                    ejemplares[idx] = ejemplares[idx] - cant
+                                    print(f"✅ Préstamo realizado. Nuevo stock: {ejemplares[idx]}.")
+                            else:
+                                ejemplares[idx] = ejemplares[idx] + cant
+                                print(f"✅ Devolución registrada. Nuevo stock: {ejemplares[idx]}.")
+
+        case "8":
+            print("\nSaliendo del sistema... ¡Hasta luego!")
+        case _:
+            print("⚠️  Opción inválida. Elegí un número del 1 al 8.")
