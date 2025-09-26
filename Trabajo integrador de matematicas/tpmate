@@ -1,0 +1,77 @@
+## Trabajo integrador de matemáticas
+## Conversión de números: de decimales a binarios y viceversa
+## Participantes: Alejo Dreiszigacker
+
+opcion = ""
+
+while opcion != "3":
+    print("\n" + "="*60)
+    print(" SISTEMA DE CONVERSIÓN DE NÚMEROS DECIMALES A BINARIOS Y VICEVERSA")
+    print("="*60)
+    print("1. Convertir de decimal a binario")
+    print("2. Convertir de binario a decimal")
+    print("3. Salir")
+    opcion = input("Seleccione una opción (1-3): ")
+
+    match opcion:
+        case "1":
+            print("\n>>> Conversión de decimal a binario\n")
+            try:
+                decimal = int(input("Ingrese un número decimal: "))
+                if decimal < 0:
+                    print("⚠️ Por favor, ingrese un número decimal no negativo.")
+                    continue
+
+                # Conversión mostrando los pasos matemáticos. Recomendacion de Copilot.
+                n = decimal
+                restos = []
+                pasos = []
+                while n > 0:
+                    cociente = n // 2
+                    resto = n % 2
+                    pasos.append(f"{n} ÷ 2 = {cociente}, resto = {resto}")
+                    restos.append(str(resto))
+                    n = cociente
+
+                binario = ''.join(reversed(restos)) if restos else "0"
+
+                # Mostrar el procedimiento paso a paso
+                print("\nPasos de la conversión:\n")
+                for p in pasos:
+                    print("  " + p)
+
+                # Resultado final
+                print(f"\n✅ El número decimal {decimal} en binario es: {binario}\n")
+
+            except ValueError:
+                print("⚠️ Entrada inválida. Debe ser un número entero.")
+
+        case "2":
+            print("\n>>> Conversión de binario a decimal\n")
+            binario = input("Ingrese un número binario: ")
+            if not all(bit in '01' for bit in binario): ## Recomendacion de Copilot.
+                print("⚠️ Ingrese un número binario válido (solo 0 y 1).")
+                continue
+
+            decimal = int(binario, 2)
+
+            # Representación posicional
+            print("\nRepresentación posicional:\n")
+            suma = []
+            for i, bit in enumerate(binario[::-1]):  # recorrer de derecha a izquierda. Recomendacion de Copilot.
+                if bit == "1":
+                    suma.append(f"1*2^{i}")
+                else:
+                    suma.append(f"0*2^{i}")
+            representacion = " + ".join(reversed(suma))
+
+            print(f"  {binario} = {representacion} = {decimal}")
+
+            # Resultado final
+            print(f"\n✅ El número binario {binario} en decimal es: {decimal}\n")
+
+        case "3":
+            print("\n👋 Saliendo del programa. ¡Hasta luego!")
+
+        case _:
+            print("⚠️ Opción inválida. Por favor, seleccione una opción válida (1-3).")
